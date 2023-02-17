@@ -1,0 +1,15 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "/opt/devkitpro/portlibs/3ds/include",
+                "/opt/devkitpro/libctru/include"
+            ],
+            "defines": [],
+            "compilerArgs": [],
+            "compilerPath": "/opt/devkitpro/devkitARM/bin/arm-none-eabi-g++"
+        }
+    ],
+    "version": 4
+}
