@@ -13,7 +13,7 @@ int main(int argc, char **argv) {
 
         mainUI.draw();
 
-        if(hidKeysDown() & KEY_START & KEY_SELECT & KEY_L & KEY_R)
+        if(hidKeysDown() & KEY_START)
             break;
 
         gfxFlushBuffers();
