@@ -1,0 +1,34 @@
+Interface: UIElem
+    void build() //to be implemented by children
+    backgroundColor
+    color
+    content
+
+UIElem: UIList
+    UIListItem items[]
+    numItems
+
+UIList: UIVertList
+    void menuUp()
+    void menuDown()
+
+UIList: UIHorzList
+    void menuLeft()
+    void menuRight()
+
+UIElem: UIListItem
+    void highlight()
+    void dehighlight()
+    void select()
+    selectedBGColor
+    selectedColor
+
+Class: UIInterface
+    UIHorzList statusBar
+    UIElem mainContent
+    UIHorzList navBar
+    void menuDown()
+    void menuUp()
+    void menuRight()
+    void menuLeft()
+    void draw()

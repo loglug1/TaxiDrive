@@ -1,19 +1,19 @@
 #include <3ds.h>
 #include <stdio.h>
+#include <iostream>
+#include "UIInterface.h"
 
 int main(int argc, char **argv) {
     gfxInitDefault();
-    consoleInit(GFX_TOP, NULL);
-
-	printf("Hello from VS Code!");
-
-	printf("\x1b[20;15HPress Start to exit.");
+    UIInterface mainUI = UIInterface(UIHorzList("Status Bar"), UIElem("Main Content", white, black), UIHorzList("Nav Bar"));
 
     while(aptMainLoop()) {
         gspWaitForVBlank();
         hidScanInput();
 
-        if(hidKeysDown() & KEY_START)
+        mainUI.draw();
+
+        if(hidKeysDown() & KEY_START & KEY_SELECT & KEY_L & KEY_R)
             break;
 
         gfxFlushBuffers();
