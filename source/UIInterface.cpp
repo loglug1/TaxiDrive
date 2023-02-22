@@ -2,7 +2,7 @@
 #include <3ds.h>
 #include <iostream>
 
-UIInterface::UIInterface(UIHorzList statusBar, UIElem mainContent, UIHorzList navBar) {
+UIInterface::UIInterface(UIHorzList* statusBar, UIElem* mainContent, UIHorzList* navBar) {
     consoleInit(GFX_TOP, &statusConsole);
     consoleInit(GFX_TOP, &mainConsole);
     consoleInit(GFX_TOP, &navConsole);
@@ -31,14 +31,14 @@ void UIInterface::menuLeft() {
 void UIInterface::draw() {
     consoleSelect(&statusConsole);
     consoleClear();
-    std::cout << statusBar;
+    std::cout << *statusBar;
 
     consoleSelect(&mainConsole);
     consoleClear();
-    std::cout << mainContent;
+    std::cout << *mainContent;
     
 
     consoleSelect(&navConsole);
     consoleClear();
-    std::cout << std::endl << navBar;
+    std::cout << *navBar;
 }
