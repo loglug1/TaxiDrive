@@ -2,7 +2,7 @@
 #include <3ds.h>
 #include <iostream>
 
-UIInterface::UIInterface(UIHorzList* statusBar, UIElem* mainContent, UIHorzList* navBar) {
+UIInterface::UIInterface(UIHorzList* statusBar, UITabList* navBar) {
     consoleInit(GFX_TOP, &statusConsole);
     consoleInit(GFX_TOP, &mainConsole);
     consoleInit(GFX_TOP, &navConsole);
@@ -16,16 +16,16 @@ UIInterface::UIInterface(UIHorzList* statusBar, UIElem* mainContent, UIHorzList*
     this->navBar = navBar;
 }
 
-void UIInterface::menuDown() {
+void UIInterface::menuDown() const {
 
 }
-void UIInterface::menuUp() {
+void UIInterface::menuUp() const {
     
 }
-void UIInterface::menuRight() {
+void UIInterface::menuRight() const {
     
 }
-void UIInterface::menuLeft() {
+void UIInterface::menuLeft() const {
     
 }
 void UIInterface::draw() {

@@ -6,16 +6,16 @@
 
 class UIInterface {
     public:
-        UIInterface(UIHorzList* statusBar, UIElem* mainContent, UIHorzList* navBar);
-        void menuDown();
-        void menuUp();
-        void menuRight();
-        void menuLeft();
+        UIInterface(UIHorzList* statusBar, UITabList* navBar);
+        void menuDown() const;
+        void menuUp() const;
+        void menuRight() const;
+        void menuLeft() const;
         void draw();
     private:
         UIHorzList* statusBar;
         UIElem* mainContent;
-        UIHorzList* navBar;
+        UITabList* navBar;
         PrintConsole statusConsole;
         PrintConsole mainConsole;
         PrintConsole navConsole;
