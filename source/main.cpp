@@ -5,11 +5,42 @@
 
 int main(int argc, char **argv) {
     gfxInitDefault();
-    UIListItem item;
+    
+    PrintConsole errConsole;
+    consoleInit(GFX_BOTTOM, &errConsole);
+    consoleSelect(&errConsole);
+    std::cout << "Debug Console:" << std::endl;
 
-    UIInterface mainUI = UIInterface(new UIHorzList(), new UITabList());
+    //ui setup
+    UIElem page1("Page 1", white, black);
+    UIElem page2("Page 2", white, black);
+    UIElem page3("Page 3", white, black);
 
-    bool starshine = false;
+    UITab tab1(&page1, "1");
+    UITab tab2(&page2, "2");
+    UITab tab3(&page3, "3");
+
+    UITabList navTabs(blue);
+    navTabs.append(tab1);
+    navTabs.append(tab2);
+    navTabs.append(tab3);
+
+    UIListItem stat1("StatusBar", blue, white);
+
+    UIHorzList statusBar(blue, white);
+    statusBar.append(stat1);
+
+    
+    //testing:
+    std::cout << page1 << std::endl;
+    std::cout << page2 << std::endl;
+    std::cout << page3 << std::endl;
+    std::cout << tab1 << std::endl;
+    std::cout << tab2 << std::endl;
+    std::cout << tab3 << std::endl;
+    std::cout << stat1 << std::endl;
+
+    UIInterface mainUI = UIInterface(&statusBar, &navTabs);
 
     while(aptMainLoop()) {
         gspWaitForVBlank();
@@ -17,15 +48,15 @@ int main(int argc, char **argv) {
 
         mainUI.draw();
 
-        if(hidKeysDown() & KEY_A) {
-            if (starshine) {
-                item.highlight();
-                starshine = false;
-            } else {
-                item.dehighlight();
-                starshine = true;
-            }
-        }
+        if (hidKeysDown() & KEY_DLEFT)
+            mainUI.menuLeft();
+        if (hidKeysDown() & KEY_DRIGHT)
+            mainUI.menuRight();
+        if (hidKeysDown() & KEY_DDOWN)
+            mainUI.menuDown();
+        if (hidKeysDown() & KEY_DUP)
+            mainUI.menuUp();
+        
 
         if(hidKeysUp() & KEY_START)
             break;

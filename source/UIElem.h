@@ -1,8 +1,8 @@
 #ifndef UI_ELEM_H
 #define UI_ELEM_H
 
-#include <iostream>
 #include <string>
+#include <functional>
 
 enum Color {
     black = 30,
@@ -32,27 +32,29 @@ class UIElem {
 class UIListItem : public UIElem {
     public:
         UIListItem(const std::string textContent = "Default Item", const Color backgroundColor = white, const Color textColor = black);
-        void highlight();
-        void dehighlight();
         void select();
+        void deselect();
+        void doAction() const;
         std::string build() const override;
         std::string getColorCode() const override;
-        void setNext(const UIListItem* &item);
-        void setPrev(const UIListItem* &item);
+        void setNext(UIListItem* const &item);
+        void setPrev(UIListItem* const &item);
+        template <typename Func> void setAction(Func func);
         UIListItem* getNext() const;
         UIListItem* getPrev() const;
-        bool isHighlighted() const;
+        bool isSelected() const;
     protected:
         UIListItem* next;
         UIListItem* prev;
-        bool highlighted;
+        std::function<void()> action;
+        bool selected;
 
 };
 
 class UITab : public UIListItem {
     public:
-        UITab(const std::string textContent = "Default Item", const Color backgroundColor = white, const Color textColor = black);
-        void setContent(const UIElem &elem);
+        UITab(UIElem* const elem = nullptr, const std::string title = "Default Tab", const Color backgroundColor = white, const Color textColor = black);
+        void setContent(UIElem* const elem);
         UIElem* getContent() const;
     private:
         UIElem* content;
@@ -63,16 +65,22 @@ class UIList : public UIElem {
         UIList(const Color backgroundColor = black, const Color textColor = white);
         ~UIList();
         UIList(const UIList &copy);
-        virtual void insertItem(const UIListItem &item, const int position = -1); // copy contents of item into new dynamically allocated memory
+        UIList operator=(const UIList &copy);
+        virtual void prepend(const UIListItem &item);
+        virtual void insertAt(const UIListItem &item, const int position);
+        virtual void insertAfter(const UIListItem &item, UIListItem* const prevItem);
+        virtual void append(const UIListItem &item);
         virtual UIListItem* getItem(const int position) const;
         virtual UIListItem* getSelected() const;
         bool isEmpty() const;
         void deleteItem(int position);
+        void deleteItem(UIListItem* const item);
         void nextItem();
-        void backItem();
-        void selectItem() const;
+        void prevItem();
+        void doSelectedAction() const;
     protected:
         UIListItem* head;
+        UIListItem* tail;
         UIListItem* selected;
         
 };
@@ -88,11 +96,17 @@ class UITabList : public UIHorzList {
     public:
         UITabList(const Color backgroundColor = black, const Color textColor = white);
         UITabList(const UIList &copy);
-        void insertItem(const UITab &tab, const int position = -1);
+        void insertAt(const UITab &tab, const int position);
+        void insertAfter(const UITab &tab, UITab* const prevTab);
+        void prepend(const UITab &tab);
+        void append(const UITab &tab);
         UITab* getItem(const int position) const override;
         UITab* getSelected() const override;
     private:
-        void insertItem(const UIListItem &item, const int position = -1) override;
+        void prepend(const UIListItem &item) override;
+        void insertAt(const UIListItem &item, const int position) override;
+        void insertAfter(const UIListItem &item, UIListItem* const prevItem) override;
+        void append(const UIListItem &item) override;
 };
 
 class UIVertList : public UIList {

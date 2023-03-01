@@ -7,12 +7,12 @@ UIInterface::UIInterface(UIHorzList* statusBar, UITabList* navBar) {
     consoleInit(GFX_TOP, &mainConsole);
     consoleInit(GFX_TOP, &navConsole);
 
-    consoleSetWindow(&statusConsole, 1, 1, 50, 2);
-	consoleSetWindow(&mainConsole, 1, 3, 50, 26);
-    consoleSetWindow(&navConsole, 1, 28, 50, 2);
+    consoleSetWindow(&statusConsole, 1, 1, 50, 1);
+	consoleSetWindow(&mainConsole, 1, 2, 50, 28);
+    consoleSetWindow(&navConsole, 1, 29, 50, 1);
 
     this->statusBar = statusBar;
-    this->mainContent = mainContent;
+    this->mainContent = nullptr;
     this->navBar = navBar;
 }
 
@@ -23,20 +23,23 @@ void UIInterface::menuUp() const {
     
 }
 void UIInterface::menuRight() const {
-    
+    navBar->nextItem();
 }
 void UIInterface::menuLeft() const {
-    
+    navBar->prevItem();
 }
 void UIInterface::draw() {
     consoleSelect(&statusConsole);
     consoleClear();
     std::cout << *statusBar;
 
-    consoleSelect(&mainConsole);
-    consoleClear();
-    std::cout << *mainContent;
-    
+
+    mainContent = navBar->getSelected()->getContent();
+    if (mainContent != nullptr) {
+        consoleSelect(&mainConsole);
+        consoleClear();
+        std::cout << *mainContent;
+    }
 
     consoleSelect(&navConsole);
     consoleClear();
