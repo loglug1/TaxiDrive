@@ -60,56 +60,39 @@ class UITab : public UIListItem {
         UIElem* content;
 };
 
-class UIList : public UIElem {
+template <typename T> class UIList : public UIElem {
     public:
         UIList(const Color backgroundColor = black, const Color textColor = white);
         ~UIList();
         UIList(const UIList &copy);
-        UIList operator=(const UIList &copy);
-        virtual void prepend(const UIListItem &item);
-        virtual void insertAt(const UIListItem &item, const int position);
-        virtual void insertAfter(const UIListItem &item, UIListItem* const prevItem);
-        virtual void append(const UIListItem &item);
-        virtual UIListItem* getItem(const int position) const;
-        virtual UIListItem* getSelected() const;
+        UIList<T> operator=(const UIList<T> &copy);
+        virtual void prepend(const T &item);
+        virtual void insertAt(const T &item, const int position);
+        virtual void insertAfter(const T &item, T* const prevItem);
+        virtual void append(const T &item);
+        virtual T* getItem(const int position) const;
+        virtual T* getSelected() const;
         bool isEmpty() const;
         void deleteItem(int position);
-        void deleteItem(UIListItem* const item);
+        void deleteItem(T* const item);
         void nextItem();
         void prevItem();
         void doSelectedAction() const;
     protected:
-        UIListItem* head;
-        UIListItem* tail;
-        UIListItem* selected;
+        T* head;
+        T* tail;
+        T* selected;
         
 };
 
-class UIHorzList : public UIList {
+template <typename T> class UIHorzList : public UIList<T> {
     public:
         UIHorzList(const Color backgroundColor = black, const Color textColor = white);
-        UIHorzList(const UIList &copy);
+        UIHorzList(const UIList<T> &copy);
         std::string build() const override;
 };
 
-class UITabList : public UIHorzList {
-    public:
-        UITabList(const Color backgroundColor = black, const Color textColor = white);
-        UITabList(const UIList &copy);
-        void insertAt(const UITab &tab, const int position);
-        void insertAfter(const UITab &tab, UITab* const prevTab);
-        void prepend(const UITab &tab);
-        void append(const UITab &tab);
-        UITab* getItem(const int position) const override;
-        UITab* getSelected() const override;
-    private:
-        void prepend(const UIListItem &item) override;
-        void insertAt(const UIListItem &item, const int position) override;
-        void insertAfter(const UIListItem &item, UIListItem* const prevItem) override;
-        void append(const UIListItem &item) override;
-};
-
-class UIVertList : public UIList {
+class UIVertList : public UIList<UIListItem> {
     public:
         UIVertList(const Color backgroundColor = black, const Color textColor = white);
         UIVertList(const UIList &copy);

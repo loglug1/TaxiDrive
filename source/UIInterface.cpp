@@ -2,7 +2,7 @@
 #include <3ds.h>
 #include <iostream>
 
-UIInterface::UIInterface(UIHorzList* statusBar, UITabList* navBar) {
+UIInterface::UIInterface(UIHorzList<UIListItem>* statusBar, UIHorzList<UITab>* navBar) {
     consoleInit(GFX_TOP, &statusConsole);
     consoleInit(GFX_TOP, &mainConsole);
     consoleInit(GFX_TOP, &navConsole);

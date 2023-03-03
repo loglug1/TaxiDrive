@@ -20,14 +20,14 @@ int main(int argc, char **argv) {
     UITab tab2(&page2, "2");
     UITab tab3(&page3, "3");
 
-    UITabList navTabs(blue);
+    UIHorzList<UITab> navTabs(blue);
     navTabs.append(tab1);
     navTabs.append(tab2);
     navTabs.append(tab3);
 
     UIListItem stat1("StatusBar", blue, white);
 
-    UIHorzList statusBar(blue, white);
+    UIHorzList<UIListItem> statusBar(blue, white);
     statusBar.append(stat1);
 
     

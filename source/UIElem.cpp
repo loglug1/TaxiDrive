@@ -102,36 +102,36 @@ UIElem* UITab::getContent() const {
 
 //==================== UIList ====================
 
-UIList::UIList(const Color backgroundColor, const Color textColor) : UIElem("Default List", backgroundColor, textColor) {
+template <typename T> UIList<T>::UIList(const Color backgroundColor, const Color textColor) : UIElem("Default List", backgroundColor, textColor) {
     head = nullptr;
     tail = nullptr;
     selected = nullptr;
 }
 
-UIList::~UIList() {
+template <typename T> UIList<T>::~UIList() {
     if (head == nullptr) {
         return;
     }
 
-    UIListItem* curItem = head;
-    UIListItem* nextItem;
+    T* curItem = head;
+    T* nextItem;
     while(curItem != nullptr) {
-        UIListItem* nextItem = curItem->getNext();
+        T* nextItem = curItem->getNext();
         delete curItem;
         curItem = nextItem;
     }
 }
 
-UIList::UIList(const UIList &copy) {
+template <typename T> UIList<T>::UIList(const UIList &copy) {
     backgroundColor = copy.backgroundColor;
     textColor = copy.textColor;
 
     if (copy.head != nullptr) {
-        UIListItem* curOldItem = copy.head;
-        UIListItem* curNewItem;
-        UIListItem* prevNewItem = nullptr;
+        T* curOldItem = copy.head;
+        T* curNewItem;
+        T* prevNewItem = nullptr;
         while(curOldItem != nullptr) {
-            curNewItem = new UIListItem(*curOldItem);
+            curNewItem = new T(*curOldItem);
             if (prevNewItem != nullptr) {
                 prevNewItem->setNext(curNewItem);
             }
@@ -152,17 +152,17 @@ UIList::UIList(const UIList &copy) {
     }
 }
 
-UIList UIList::operator=(const UIList &copy) {
+template <typename T> UIList<T> UIList<T>::operator=(const UIList<T> &copy) {
     if (this != &copy) {
         backgroundColor = copy.backgroundColor;
         textColor = copy.textColor;
 
         if (copy.head != nullptr) {
-            UIListItem* curOldItem = copy.head;
-            UIListItem* curNewItem;
-            UIListItem* prevNewItem = nullptr;
+            T* curOldItem = copy.head;
+            T* curNewItem;
+            TIMESPEC_TO_TIMEVAL* prevNewItem = nullptr;
             while(curOldItem != nullptr) {
-                curNewItem = new UIListItem(*curOldItem);
+                curNewItem = new T(*curOldItem);
                 if (prevNewItem != nullptr) {
                     prevNewItem->setNext(curNewItem);
                 }
@@ -185,8 +185,8 @@ UIList UIList::operator=(const UIList &copy) {
     return *this;
 }
 
-void UIList::prepend(const UIListItem &item) {
-    UIListItem* newItem = new UIListItem(item);
+template <typename T> void UIList<T>::prepend(const T &item) {
+    T* newItem = new T(item);
     if (head == nullptr) {
         head = newItem;
         tail = newItem;
@@ -200,20 +200,20 @@ void UIList::prepend(const UIListItem &item) {
     }
 }
 
-void UIList::insertAt(const UIListItem &item, const int position) {
+template <typename T> void UIList<T>::insertAt(const T &item, const int position) {
     insertAfter(item, getItem(position - 1));
 }
 
-void UIList::insertAfter(const UIListItem &item, UIListItem* const prevItem) { //TODO: add check for empty list
-    UIListItem* newItem = new UIListItem(item);
+template <typename T> void UIList<T>::insertAfter(const T &item, T* const prevItem) { //TODO: add check for empty list
+    T* newItem = new T(item);
     newItem->setPrev(prevItem);
     newItem->setNext(prevItem->getNext());
     prevItem->setNext(newItem);
     newItem->getNext()->setPrev(newItem);
 }
 
-void UIList::append(const UIListItem &item) {
-    UIListItem* newItem = new UIListItem(item);
+template <typename T> void UIList<T>::append(const T &item) {
+    T* newItem = new T(item);
     if (head == nullptr) {
         head = newItem;
         tail = newItem;
@@ -227,33 +227,33 @@ void UIList::append(const UIListItem &item) {
     }
 }
 
-UIListItem* UIList::getItem(const int position) const {
-    UIListItem* item = head;
+template <typename T> T* UIList<T>::getItem(const int position) const {
+    T* item = head;
     for (int i = 0; i < position; i++) {
         item = item->getNext();
     }
     return item;
 }
 
-UIListItem* UIList::getSelected() const {
+template <typename T> T* UIList<T>::getSelected() const {
     return selected;
 }
 
-bool UIList::isEmpty() const {
+template <typename T> bool UIList<T>::isEmpty() const {
     return head == nullptr;
 }
 
-void UIList::deleteItem(int position) {
+template <typename T> void UIList<T>::deleteItem(int position) {
     deleteItem(getItem(position));
 }
 
-void deleteItem(UIListItem* const item) {
+template <typename T> void deleteItem(T* const item) {
     item->getPrev()->setNext(item->getNext());
     item->getNext()->setPrev(item->getPrev());
     delete item;
 }
 
-void UIList::nextItem() {
+template <typename T> void UIList<T>::nextItem() {
     if (selected->getNext() == nullptr) {
         return;
     }
@@ -263,7 +263,7 @@ void UIList::nextItem() {
     selected->select();
 }
 
-void UIList::prevItem() {
+template <typename T> void UIList<T>::prevItem() {
     if (selected->getPrev() == nullptr) {
         return;
     }
@@ -273,18 +273,18 @@ void UIList::prevItem() {
     selected->select();
 }
 
-void UIList::doSelectedAction() const {
+template <typename T> void UIList<T>::doSelectedAction() const {
     selected->doAction();
 }
 
 
 //==================== UIHorzList ====================
 
-UIHorzList::UIHorzList(const Color backgroundColor, const Color textColor) : UIList(backgroundColor, textColor) {}
+template <typename T> UIHorzList<T>::UIHorzList(const Color backgroundColor, const Color textColor) : UIList<T>(backgroundColor, textColor) {}
 
-UIHorzList::UIHorzList(const UIList &copy) : UIList(copy) {}
+template <typename T> UIHorzList<T>::UIHorzList(const UIList<T> &copy) : UIList(copy) {}
 
-std::string UIHorzList::build() const {
+template <typename T> std::string UIHorzList<T>::build() const {
     std::ostringstream oss;
     UIListItem* curItem = head;
     oss << getColorCode();
@@ -294,72 +294,6 @@ std::string UIHorzList::build() const {
     }
     return oss.str();
 }
-
-
-//==================== UITabList ====================
-
-UITabList::UITabList(const Color backgroundColor, const Color textColor) : UIHorzList(backgroundColor, textColor) {}
-
-UITabList::UITabList(const UIList &copy) : UIHorzList(copy) {}
-
-void UITabList::insertAt(const UITab &tab, const int position) {
-    insertAfter(tab, getItem(position - 1));
-}
-
-void UITabList::insertAfter(const UITab &tab, UITab* const prevTab) {
-    UITab* newItem = new UITab(tab);
-    newItem->setPrev(prevTab);
-    newItem->setNext(prevTab->getNext());
-    prevTab->setNext(newItem);
-    newItem->getNext()->setPrev(newItem);
-}
-
-void UITabList::prepend(const UITab &tab) {
-    UITab* newItem = new UITab(tab);
-    if (head == nullptr) {
-        head = newItem;
-        tail = newItem;
-        selected = newItem;
-        newItem->select();
-    } else {
-        newItem->setNext(head);
-        newItem->setPrev(nullptr);
-        head = newItem;
-        newItem->getNext()->setPrev(newItem);
-    }
-}
-
-void UITabList::append(const UITab &tab) {
-    UITab* newItem = new UITab(tab);
-    if (head == nullptr) {
-        head = newItem;
-        tail = newItem;
-        selected = newItem;
-        newItem->select();
-    } else {
-        tail->setNext(newItem);
-        newItem->setPrev(tail);
-        newItem->setNext(nullptr);
-        tail = newItem;
-    }
-}
-
-UITab* UITabList::getItem(const int position) const {
-    UITab* item = (UITab*)head;
-    for (int i = 0; i < position; i++) {
-        item = (UITab*)item->getNext();
-    }
-    return item;
-}
-
-UITab* UITabList::getSelected() const {
-    return (UITab*)selected;
-}
-
-void UITabList::prepend(const UIListItem &item) {}
-void UITabList::insertAt(const UIListItem &item, const int position) {}
-void UITabList::insertAfter(const UIListItem &item, UIListItem* const prevItem) {}
-void UITabList::append(const UIListItem &item) {}
 
 //==================== UIVertList ====================
 
